@@ -161,13 +161,12 @@ Pliki SQLite i ich kopie nie są szyfrowane; chronią je uprawnienia konta Windo
 
 ## Zrzuty ekranu
 
-Miejsca na rzeczywiste zrzuty gotowej aplikacji — poniższe pozycje nie są renderami ani dowodem przeprowadzonych testów:
-
-- **[SCREENSHOT PLACEHOLDER]** Dashboard: ciemny interfejs, karty czasu i Health Score.
-- **[SCREENSHOT PLACEHOLDER]** Popup przypomnienia oraz okno z ćwiczeniami.
-- **[SCREENSHOT PLACEHOLDER]** Statistics: dzienne wartości i 7 dni historii.
-- **[SCREENSHOT PLACEHOLDER]** Settings oraz widoczne oznaczenie Demo Mode.
-- **[SCREENSHOT PLACEHOLDER]** Strict Mode z przyciskiem Emergency skip.
+- Dashboard: ciemny interfejs, karty czasu i Health Score ![Dashboard](.\screenshots\dashboard.png)
+- Popup przypomnienia oraz okno z ćwiczeniami <img src=".\screenshots\popup.png" width="50%" alt="Popup"> <img src=".\screenshots\popup2.png" width="50%" alt="Popup">
+- Statistics: dzienne wartości i 7 dni historii ![Statistics](.\screenshots\stats.png)
+- Biblioteka ćwiczeń ![Excercise library](.\screenshots\excercises.png)
+- Settings oraz opcja Demo Mode ![Settings](.\screenshots\settings.png) ![Settings](.\screenshots\settings2.png)
+- Strict Mode z przyciskiem Emergency skip. ![Strict Mode](.\screenshots\strict.png) ![Strict Mode](.\screenshots\strict2.png)
 
 ## Testowanie
 
