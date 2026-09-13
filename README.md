@@ -1,200 +1,202 @@
+[English](README.md) | [Polski](README.pl.md)
+
 # HealthBreak
 
-Lokalna aplikacja desktopowa dla Windows, która pomaga regularnie odchodzić od komputera. Mierzy aktywność myszy i klawiatury przez czas ostatniego zdarzenia wejścia, rozpoznaje bezczynność, proponuje przerwy i prowadzi użytkownika przez proste ćwiczenia.
+A local Windows desktop application that helps users take regular breaks from the computer. It measures mouse and keyboard activity using the timestamp of the last input event, detects inactivity, suggests breaks, and guides the user through simple exercises.
 
-Projekt realizuje wskazany stos **C# 12, .NET 8, WinUI 3 i Windows App SDK**. Wymagania dotyczące Pythona, Qt, QSS i signals/slots zostały potraktowane jako pozostałości alternatywnej specyfikacji: aplikacja używa XAML, MVVM i komunikacji z wątkiem interfejsu przez `DispatcherQueue`. Nie wymaga Pythona.
+The project uses the specified stack: **C# 12, .NET 8, WinUI 3, and Windows App SDK**. Requirements related to Python, Qt, QSS, and signals/slots were treated as remnants of an alternative specification: the application uses XAML, MVVM, and UI-thread communication through `DispatcherQueue`. It does not require Python.
 
-## Co zawiera
+## Features
 
-- Dashboard z czasem aktywności, bieżącą sesją, czasem od przerwy, liczbą przerw, średnią i najdłuższą sesją, pominięciami oraz wykonanymi ćwiczeniami.
-- Cztery poziomy przypomnień: domyślnie po 30, 45, 60 i 75 minutach, z rozpoczęciem przerwy, odroczeniem o 5 minut i pominięciem.
-- Przerwy Quick, Short i Full, katalog ponad 20 ćwiczeń oczu, karku, ramion, pleców i ruchowych oraz ręczne potwierdzanie wykonania.
-- Regułowy dobór ćwiczeń z uwzględnieniem długości pracy, ostatnich propozycji, pominięć i różnorodności kategorii.
-- Statistics z podsumowaniem dnia i historią 7 dni oraz lokalny zapis SQLite.
-- Ustawienia progów, powiadomień, dźwięku, autostartu, śledzenia kategorii aplikacji i Strict Mode.
-- Ikonę w zasobniku systemowym z otwieraniem dashboardu, rozpoczęciem przerwy, pauzą/wznowieniem monitoringu, ustawieniami i wyjściem.
-- Wyraźnie oznaczony, opcjonalny **Demo Mode ×60** do prezentacji hackathonowej.
+- Dashboard showing active time, current session, time since the last break, number of breaks, average and longest session, skipped reminders, and completed exercises.
+- Four reminder levels: by default after 30, 45, 60, and 75 minutes, with options to start a break, snooze for 5 minutes, or skip.
+- Quick, Short, and Full breaks, a library of more than 20 eye, neck, shoulder, back, and movement exercises, plus manual completion confirmation.
+- Rule-based exercise selection that considers work duration, recent suggestions, skipped items, and category diversity.
+- Statistics with a daily summary, 7-day history, and local SQLite storage.
+- Settings for thresholds, notifications, sound, autostart, application-category tracking, and Strict Mode.
+- A system tray icon for opening the dashboard, starting a break, pausing/resuming monitoring, opening settings, and exiting the application.
+- A clearly marked, optional **Demo Mode ×60** for hackathon presentations.
 
-## Wymagania
+## Requirements
 
-- Windows 10 w wersji 1809 lub nowszej, albo Windows 11; architektura x64.
-- Do zbudowania: .NET SDK 8 lub nowszy i PowerShell. Visual Studio nie jest wymagane do uruchomienia skryptów; do pracy w IDE można użyć Visual Studio z obsługą WinUI.
-- Dostęp do NuGet podczas pierwszego przywrócenia zależności. Po zbudowaniu aplikacja działa lokalnie bez usług chmurowych, kluczy API, konta i połączenia z internetem.
+- Windows 10 version 1809 or later, or Windows 11; x64 architecture.
+- To build: .NET SDK 8 or later and PowerShell. Visual Studio is not required to run the scripts; Visual Studio with WinUI support can be used for IDE development.
+- NuGet access during the first dependency restore. After the application is built, it runs locally without cloud services, API keys, an account, or an internet connection.
 
-## Instalacja i uruchomienie ze źródeł
+## Installation and running from source
 
-Otwórz PowerShell w katalogu projektu:
+Open PowerShell in the project directory:
 
 ```powershell
 dotnet --info
 ./scripts/run.ps1
 ```
 
-Skrypt przywraca zależności, buduje wersję x64 i uruchamia `HealthBreak.App.exe`. Nie dodaje autostartu i nie instaluje usługi. Pliki roboczej kompilacji trafiają do standardowego katalogu `src/HealthBreak.App/bin/x64/Debug/net8.0-windows10.0.19041.0/win-x64`. Zachowanie standardowej struktury katalogów jest wymagane przez zasoby XAML WinUI.
+The script restores dependencies, builds the x64 version, and launches `HealthBreak.App.exe`. It does not enable autostart or install a service. Build output is placed in the standard directory `src/HealthBreak.App/bin/x64/Debug/net8.0-windows10.0.19041.0/win-x64`. Keeping the standard directory structure is required by WinUI XAML resources.
 
-Przykład uruchomienia z osobnym katalogiem danych do prezentacji:
+Example of running the application with a separate data directory for a presentation:
 
 ```powershell
 ./scripts/run.ps1 -DataDir ./artifacts/demo-data
 ```
 
-Opcje skryptu: `-Configuration Release`, `-Background`, `-NoRestore`. Opcja `-NoRestore` wymaga wcześniejszego poprawnego pobrania zależności.
+Script options: `-Configuration Release`, `-Background`, `-NoRestore`. The `-NoRestore` option requires dependencies to have been successfully restored beforehand.
 
-Jeżeli lokalna polityka PowerShell blokuje uruchamianie skryptu, można wykonać pojedynczy skrypt bez trwałej zmiany polityki systemu:
+If the local PowerShell policy blocks script execution, you can run a single script without permanently changing the system policy:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/run.ps1
 ```
 
-## Wersja do przekazania użytkownikowi
+## Build for distribution
 
 ```powershell
 ./scripts/publish.ps1
 ```
 
-Gotowy katalog to `artifacts/HealthBreak-win-x64`. Zawiera aplikację, runtime .NET i Windows App SDK. Przekaż **cały katalog**, a następnie uruchom `HealthBreak.App.exe`. Sam plik EXE nie wystarcza. Na docelowym komputerze nie jest potrzebny SDK. To wersja przenośna, bez instalatora i bez podpisu komercyjnego.
+The ready-to-distribute directory is `artifacts/HealthBreak-win-x64`. It contains the application, the .NET runtime, and Windows App SDK. Distribute the **entire directory**, then launch `HealthBreak.App.exe`. The EXE file alone is not sufficient. The target computer does not need the SDK. This is a portable build without an installer or commercial code signing.
 
-Argumenty aplikacji:
+Application arguments:
 
 ```powershell
 ./HealthBreak.App.exe --data-dir "D:/HealthBreakData"
 ./HealthBreak.App.exe --background
 ```
 
-`--background` uruchamia aplikację w zasobniku. `--data-dir` wskazuje katalog lokalnej bazy zamiast domyślnego. W zwykłym trybie zamknięcie głównego okna pozostawia monitoring w zasobniku; **Exit** kończy aplikację. Jeżeli ikona zasobnika nie jest dostępna, aplikacja powinna pozostać dostępna przez okno.
+`--background` starts the application in the system tray. `--data-dir` points to a local database directory instead of the default one. In normal mode, closing the main window leaves monitoring active in the tray; **Exit** terminates the application. If the tray icon is unavailable, the application should remain accessible through its window.
 
-## Jak liczony jest czas
+## How time is measured
 
-`GetLastInputInfo` informuje, kiedy wystąpiło ostatnie zdarzenie myszy lub klawiatury. Aplikacja nie przechwytuje poszczególnych klawiszy. To pomiar aktywności wejścia: samo oglądanie filmu lub czytanie bez dotykania urządzeń może przejść w bezczynność.
+`GetLastInputInfo` reports when the last mouse or keyboard event occurred. The application does not capture individual keystrokes. This is a measure of input activity: simply watching a video or reading without touching the input devices may be treated as inactivity.
 
-Domyślny próg idle wynosi 180 sekund. Czas bez ruchu przed rozstrzygnięciem jest tymczasowy; po wykryciu dłuższej bezczynności zostaje skorygowany do czasu idle. Dzięki temu trzy minuty oczekiwania na próg nie pozostają sztucznie zaliczone do pracy. Blokada pulpitu, odłączona sesja lub przerwa w próbkowaniu nie dodają czasu pracy.
+The default idle threshold is 180 seconds. Inactive time before the threshold decision is temporary; once a longer idle period is detected, it is corrected to idle time. This prevents the three minutes spent waiting for the threshold from being artificially counted as work. Locking the desktop, disconnecting the session, or a gap in sampling does not add work time.
 
-Naturalna przerwa jest zapisywana po wznowieniu aktywności:
+A natural break is recorded after activity resumes:
 
-| Bezczynność | Domyślna interpretacja |
+| Inactivity | Default interpretation |
 | --- | --- |
-| Mniej niż 2 minuty | Nie jest przerwą |
-| Od 2 do 5 minut włącznie | Krótka przerwa |
-| Ponad 5 minut | Pełna przerwa |
+| Less than 2 minutes | Not a break |
+| From 2 to 5 minutes inclusive | Short break |
+| More than 5 minutes | Full break |
 
-Minimalna długość przerwy i próg idle są niezależnymi ustawieniami. Każda ukończona przerwa prowadzona (Quick, Short albo Full) zeruje licznik bieżącej sesji i rozpoczyna nowy cykl przypomnień. Naturalna krótka przerwa wykryta przez idle domyślnie zmniejsza licznik ciągłej pracy o 15 minut; można zmienić ulgę lub wybrać pełne zerowanie. Korekta nie odejmuje rzeczywiście przepracowanego czasu od sumy dziennej.
+The minimum break length and idle threshold are independent settings. Every completed guided break (Quick, Short, or Full) resets the current-session counter and starts a new reminder cycle. By default, a naturally detected short idle break reduces the continuous-work counter by 15 minutes; this relief value can be changed, or full reset can be selected. This adjustment does not subtract actual worked time from the daily total.
 
-| Przerwa prowadzona | Czas | Domyślna propozycja |
+| Guided break | Duration | Default suggestion |
 | --- | --- | --- |
-| Quick | 45 sekund | Od pierwszego progu do drugiego, domyślnie 30–44 min |
-| Short | 2 minuty 30 sekund | Od drugiego do mocnego progu, domyślnie 45–74 min |
-| Full | 5 minut | Od mocnego progu, domyślnie od 75 min |
+| Quick | 45 seconds | From the first threshold to the second, by default 30–44 min |
+| Short | 2 minutes 30 seconds | From the second threshold to the strong threshold, by default 45–74 min |
+| Full | 5 minutes | From the strong threshold, by default from 75 min onward |
 
-Przerwa nie jest zaliczana jako ukończona przed upływem jej czasu. Potwierdzenie ćwiczenia jest dobrowolnym oświadczeniem użytkownika, niezależnym od timera.
+A break is not counted as completed before its duration has elapsed. Exercise confirmation is a voluntary user declaration and is independent of the timer.
 
-## Ćwiczenia i Health Score
+## Exercises and Health Score
 
-Katalog znajduje się w `src/HealthBreak.Core/Data/exercises.json`. Każdy wpis zawiera identyfikator, nazwę, kategorię, opis, sugerowany czas oraz opcjonalne powtórzenia. Plik jest osadzony w aplikacji.
+The exercise library is located at `src/HealthBreak.Core/Data/exercises.json`. Each entry contains an identifier, name, category, description, suggested duration, and optional repetitions. The file is embedded in the application.
 
-Selektor jest deterministyczny. Zaczyna od 100 punktów na ćwiczenie, premiuje niewykorzystane lub dawno proponowane pozycje i kategorię dopasowaną do sesji, a odejmuje punkty za niedawne propozycje, pomijanie, duplikowanie kategorii oraz ruch w ostatnich trzech przerwach. Po 45 minutach preferuje oczy; od 60 minut uwzględnia oczy i ruch; od 90 minut dodaje kark albo ramiona. Remisy rozstrzyga identyfikator ćwiczenia. Nie używa ML ani AI.
+The selector is deterministic. It starts with 100 points per exercise, rewards exercises that have not been used or have not been suggested recently, and rewards categories suited to the session. It subtracts points for recent suggestions, skips, duplicated categories, and movement exercises appearing in the last three breaks. After 45 minutes, it prefers eye exercises; from 60 minutes onward, it considers eyes and movement; from 90 minutes onward, it also adds neck or shoulder exercises. Ties are resolved by exercise identifier. It does not use ML or AI.
 
-Health Score jest **wskaźnikiem nawyków**, obliczanym dla wybranego dnia:
+Health Score is a **habit indicator** calculated for the selected day:
 
 ```text
-L = max(najdłuższa zapisana sesja, aktualna sesja), w minutach
+L = max(longest saved session, current session), in minutes
 score = 100
-        - min(35, 0,4 × max(0, L - 45))
-        - min(40, 3 × pominięte przypomnienia)
-        - min(12, 1,5 × odroczenia)
-        - min(16, 4 × emergency skip)
-        + min(20, 4 × ukończone przerwy)
-        + min(20, 2 × wykonane ćwiczenia)
+        - min(35, 0.4 × max(0, L - 45))
+        - min(40, 3 × skipped reminders)
+        - min(12, 1.5 × snoozes)
+        - min(16, 4 × emergency skips)
+        + min(20, 4 × completed breaks)
+        + min(20, 2 × completed exercises)
 ```
 
-Wynik jest ograniczony do 0–100 i zaokrąglony. Kary mają limity, dzięki czemu pojedynczy zły dzień nie zamyka drogi do poprawy wyniku. Każda ukończona przerwa i ćwiczenie daje widoczny bonus; ręczne otwarcie i zamknięcie podglądu przerwy nie jest liczone jako odrzucone przypomnienie. Emergency skip jest także pominięciem i otrzymuje dodatkową karę. Statusy: **Excellent** 80–100, **Good** 60–79, **Needs attention** 40–59 i **Poor** 0–39. Długie sesje nie są diagnozą; wskaźnik nie ocenia stanu zdrowia.
+The result is limited to 0–100 and rounded. Penalties are capped, so a single bad day does not make it impossible to improve the score. Every completed break and exercise provides a visible bonus; manually opening and closing the break preview is not counted as a dismissed reminder. An Emergency skip also counts as a skip and receives an additional penalty. Statuses: **Excellent** 80–100, **Good** 60–79, **Needs attention** 40–59, and **Poor** 0–39. Long sessions are not a diagnosis; the score does not assess the user's health condition.
 
-## Strict Mode i autostart
+## Strict Mode and autostart
 
-Strict Mode jest domyślnie wyłączony. Po ostatnim progu przypomnienia pokazuje pełnoekranową propozycję wymaganej przerwy z ćwiczeniami. Przycisk **Emergency skip** pozostaje dostępny i zapisuje zdarzenie w statystykach. Program nie blokuje skrótów Windows, Alt+Tab ani Menedżera zadań i nie instaluje hooków klawiatury. Można go bezpiecznie zamknąć.
+Strict Mode is disabled by default. After the final reminder threshold, it displays a full-screen prompt for the required break with exercises. The **Emergency skip** button remains available and records the event in the statistics. The program does not block Windows shortcuts, Alt+Tab, or Task Manager, and it does not install keyboard hooks. It can be closed safely.
 
-Autostart jest domyślnie wyłączony. Zapisanie odpowiedniej opcji dodaje wyłącznie wpis bieżącego użytkownika `HKCU/Software/Microsoft/Windows/CurrentVersion/Run/HealthBreak`, wskazujący bieżący EXE z argumentem `--background`. Wyłączenie usuwa ten wpis. Po przeniesieniu aplikacji należy ponownie zapisać autostart z nowej lokalizacji.
+Autostart is disabled by default. Saving the corresponding option adds only the current user's `HKCU/Software/Microsoft/Windows/CurrentVersion/Run/HealthBreak` entry, pointing to the current EXE with the `--background` argument. Disabling the option removes this entry. After moving the application, autostart must be saved again from the new location.
 
 ## Demo Mode
 
-Włącz **Demo Mode** w aplikacji. Jedna rzeczywista sekunda odpowiada minucie czasu aplikacji. Pierwsze przypomnienie pojawia się po około 30 sekundach aktywnej pracy, a próg 60 minut po około minucie.
+Enable **Demo Mode** in the application. One real second corresponds to one minute of application time. The first reminder appears after about 30 seconds of active work, and the 60-minute threshold is reached after about one minute.
 
-Demo skaluje także idle i czas przerw. Przy domyślnych ustawieniach 3 sekundy bez wejścia oznaczają 3 minuty idle, więc podczas prezentowania narastającej sesji poruszaj myszą lub korzystaj z klawiatury co najwyżej co 1–2 sekundy. Demo jest zawsze widocznie oznaczone, nie włącza się domyślnie i nie jest zapisywane jako preferencja na kolejne uruchomienie. Dane demo mają `is_demo=1` i są oddzielone w statystykach od normalnej pracy. Szczegółowy scenariusz: [docs/DEMO.md](docs/DEMO.md).
+Demo Mode also scales idle time and break duration. With the default settings, 3 seconds without input equals 3 minutes of idle time, so while demonstrating an increasing session timer, move the mouse or use the keyboard at least every 1–2 seconds. Demo Mode is always clearly marked, is not enabled by default, and is not saved as a preference for the next launch. Demo data has `is_demo=1` and is separated from normal-use data in the statistics. Detailed scenario: [docs/DEMO.md](docs/DEMO.md).
 
-## Architektura
+## Architecture
 
 ```text
 HealthBreak.sln
 src/
   HealthBreak.Core/
-    Models/                  modele i walidacja ustawień
+    Models/                  models and settings validation
     Services/                SessionManager, BreakManager, ExerciseSelector, HealthScore
-    Data/exercises.json      osadzony katalog ćwiczeń
+    Data/exercises.json      embedded exercise library
   HealthBreak.Data/
-    DatabaseSchema.cs        schemat i wersjonowanie SQLite
-    HealthRepository.cs      transakcje, statystyki, ustawienia i historia
+    DatabaseSchema.cs        SQLite schema and versioning
+    HealthRepository.cs      transactions, statistics, settings, and history
   HealthBreak.App/
-    Services/Native/          Win32 input, proces, tray, autostart, okno i dźwięk
-    Assets/HealthBreak.ico   ikona okna, paska zadań, tray i pliku EXE
-    Resources/Theme.xaml     kolory, typografia i style
-    MainWindow.xaml          powłoka interfejsu
-    App.xaml                 zasoby i uruchomienie WinUI
-tests/
-  HealthBreak.Core.Tests/     deterministyczne scenariusze czasu i reguł
-  HealthBreak.Data.Tests/     baza, agregacje i trwałość danych
-scripts/                     uruchomienie, publikacja, testy
-docs/                        demonstracja i lista weryfikacji Windows
+    Services/Native/         Win32 input, process, tray, autostart, window, and sound
+    Assets/HealthBreak.ico   window, taskbar, tray, and EXE icon
+    Resources/Theme.xaml     colors, typography, and styles
+    MainWindow.xaml          UI shell
+    App.xaml                 WinUI resources and startup
+ tests/
+  HealthBreak.Core.Tests/    deterministic time and rule scenarios
+  HealthBreak.Data.Tests/    database, aggregation, and persistence
+scripts/                     run, publish, and test scripts
+docs/                        demo and Windows verification checklist
 ```
 
-Warstwa Core nie zależy od WinUI ani Windows API. Monitoring i operacje bazy wykonuje koordynator w tle; interfejs otrzymuje stan przez kolejkę UI. Zamykanie kończy pracę w tle, zapisuje zmiany, zwalnia SQLite oraz usuwa ikonę i subclass okna. Native tray korzysta z `Shell_NotifyIcon` i odtwarza ikonę po ponownym uruchomieniu Explorera. Ekran **Help** w bocznej nawigacji opisuje pomiar czasu, przypomnienia, rodzaje przerw, Health Score, Demo Mode i zasady prywatności.
+The Core layer does not depend on WinUI or the Windows API. Monitoring and database operations are handled by a background coordinator; the UI receives state through the UI queue. Shutdown stops background work, saves changes, releases SQLite, and removes the tray icon and window subclass. The native tray uses `Shell_NotifyIcon` and restores the icon after Explorer restarts. The **Help** screen in the side navigation explains time measurement, reminders, break types, Health Score, Demo Mode, and privacy rules.
 
-Technologie: C# 12, .NET 8, WinUI 3 / Windows App SDK, XAML, CommunityToolkit.Mvvm, Microsoft.Data.Sqlite, SQLite i Win32 P/Invoke. Wykres tygodniowy jest rysowany przez interfejs XAML; QtCharts i matplotlib nie są potrzebne.
+Technologies: C# 12, .NET 8, WinUI 3 / Windows App SDK, XAML, CommunityToolkit.Mvvm, Microsoft.Data.Sqlite, SQLite, and Win32 P/Invoke. The weekly chart is rendered by the XAML UI; QtCharts and matplotlib are not required.
 
-## Dane i prywatność
+## Data and privacy
 
-Domyślna baza: `%LOCALAPPDATA%/HealthBreak/healthbreak.db`. SQLite przechowuje sesje, przerwy, ćwiczenia, potwierdzenia, działania wobec przypomnień i ustawienia. Baza używa transakcji, parametrów SQL, ograniczeń, kluczy obcych, trybu WAL i pełnej synchronizacji zapisu. Po nieoczekiwanym zamknięciu otwarte sesje kończą się na ostatnim zapisanym punkcie pomiarowym.
+Default database: `%LOCALAPPDATA%/HealthBreak/healthbreak.db`. SQLite stores sessions, breaks, exercises, confirmations, reminder actions, and settings. The database uses transactions, SQL parameters, constraints, foreign keys, WAL mode, and full write synchronization. After an unexpected shutdown, open sessions end at the last saved measurement point.
 
-Program regularnie tworzy zweryfikowaną kopię `healthbreak.db.backup`. Przy każdym starcie sprawdza integralność bazy i relacje kluczy obcych. Jeżeli baza jest uszkodzona, HealthBreak zachowuje ją jako `healthbreak.db.corrupt-DATA`, przywraca ostatnią prawidłową kopię, a gdy kopii nie da się użyć — tworzy nową, sprawną bazę i pokazuje komunikat w aplikacji. Kopia powstaje najpierw jako plik tymczasowy i zastępuje poprzednią dopiero po pomyślnym sprawdzeniu, więc przerwany zapis kopii nie niszczy ostatniej wersji ratunkowej.
+The program regularly creates a verified backup at `healthbreak.db.backup`. On every startup, it checks database integrity and foreign-key relationships. If the database is corrupted, HealthBreak preserves it as `healthbreak.db.corrupt-DATA`, restores the latest valid backup, and if the backup cannot be used, creates a new valid database and shows a message in the application. The backup is first created as a temporary file and replaces the previous backup only after successful verification, so an interrupted backup write does not destroy the last recovery copy.
 
-Śledzenie aktywnej aplikacji jest **wyłączone domyślnie**. Po włączeniu odczytywana jest wyłącznie nazwa procesu aktywnego okna, a w bazie zapisywane są sumy kategorii: Work, Browser, Gaming, Communication, Development, Entertainment i Other. Nazwa procesu służy bieżącemu widokowi i klasyfikacji. Nie są pobierane tytuły okien, adresy stron, treść dokumentów, schowek, zrzuty ekranu ani naciśnięte klawisze. Program nie używa kamery, analizy obrazu, zewnętrznego API ani chmury.
+Active-application tracking is **disabled by default**. When enabled, only the process name of the active window is read, and category totals are stored in the database: Work, Browser, Gaming, Communication, Development, Entertainment, and Other. The process name is used for the current view and classification. Window titles, website addresses, document contents, clipboard data, screenshots, and keystrokes are not collected. The program does not use the camera, image analysis, external APIs, or cloud services.
 
-Pliki SQLite i ich kopie nie są szyfrowane; chronią je uprawnienia konta Windows. Aby wykonać dodatkową kopię ręczną, zakończ aplikację przez **Exit**, a następnie skopiuj katalog danych. Usunięcie katalogu danych po zakończeniu aplikacji resetuje historię i ustawienia.
+SQLite files and their backups are not encrypted; they are protected by Windows account permissions. To make an additional manual backup, exit the application using **Exit**, then copy the data directory. Deleting the data directory after closing the application resets the history and settings.
 
-## Zrzuty ekranu
+## Screenshots
 
-- Dashboard: ciemny interfejs, karty czasu i Health Score
+- Dashboard: dark interface, time cards, and Health Score
 
 ![Dashboard](./screenshots/dashboard.png)
 
-- Popup przypomnienia oraz okno z ćwiczeniami
+- Reminder popup and exercise window
 
 <img src="./screenshots/popup.png" width="48%" alt="Popup"> <img src="./screenshots/popup2.png" width="48%" alt="Popup">
 
-- Statistics: dzienne wartości i 7 dni historii
+- Statistics: daily values and 7-day history
 
 ![Statistics](./screenshots/stats.png)
 
-- Biblioteka ćwiczeń
+- Exercise library
 
 ![Excercise library](./screenshots/excercises.png)
 
-- Settings oraz opcja Demo Mode
+- Settings and the Demo Mode option
 
 ![Settings](./screenshots/settings.png)
 ![Settings](./screenshots/settings2.png)
 
-- Strict Mode z przyciskiem Emergency skip.
+- Strict Mode with the Emergency skip button.
 
 ![Strict Mode](./screenshots/strict.png)
 ![Strict Mode](./screenshots/strict2.png)
 
-## Testowanie
+## Testing
 
 ```powershell
 ./scripts/test.ps1
 ```
 
-Skrypt uruchamia testy Core i SQLite. `RollForward=Major` pozwala uruchomić host testów także przy zainstalowanym nowszym runtime .NET. Wyniki TRX trafiają do `artifacts/TestResults`. Status wykonanych sprawdzeń i scenariusze wymagające interaktywnego Windows są opisane w [docs/TESTING.md](docs/TESTING.md). Samo powodzenie testów jednostkowych nie zastępuje sprawdzenia okna, tray i blokady Windows na rzeczywistym pulpicie.
+The script runs the Core and SQLite tests. `RollForward=Major` allows the test host to run even when a newer .NET runtime is installed. TRX results are written to `artifacts/TestResults`. The status of completed checks and scenarios requiring an interactive Windows environment are described in [docs/TESTING.md](docs/TESTING.md). Passing unit tests alone does not replace testing the window, tray, and Windows lock behavior on a real desktop.
 
-## Informacja medyczna
+## Medical information
 
-HealthBreak nie jest urządzeniem medycznym ani poradą medyczną. Proponuje ogólne przypomnienia i łagodne ćwiczenia; użytkownik sam decyduje o ich wykonaniu. Nie wykonuj ruchu powodującego ból. Dobierz ćwiczenia do własnych możliwości i zaleceń osoby prowadzącej leczenie, jeżeli takie masz.
+HealthBreak is not a medical device and does not provide medical advice. It offers general reminders and gentle exercises; the user decides whether to perform them. Do not perform movements that cause pain. Choose exercises appropriate to your abilities and follow the recommendations of your healthcare provider, if applicable.
