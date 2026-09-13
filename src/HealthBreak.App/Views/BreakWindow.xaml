@@ -1,0 +1,30 @@
+<Window x:Class="HealthBreak.App.Views.BreakWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Grid x:Name="Root" Background="#101A17" RequestedTheme="Dark">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+   <StackPanel MaxWidth="620" Padding="30" Spacing="18" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+    <Grid><StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE95E;" Foreground="{StaticResource Accent}" FontSize="18"/><TextBlock Text="HEALTHBREAK / YOUR PAUSE" FontSize="10" Foreground="{StaticResource Accent}" CharacterSpacing="150"/></StackPanel><TextBlock x:Name="DemoLabel" Text="DEMO · 60×" Foreground="#F0CC8A" HorizontalAlignment="Right" FontSize="10" Visibility="Collapsed"/></Grid>
+    <TextBlock x:Name="Heading" FontSize="32" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,6,0,0"/>
+    <TextBlock x:Name="Description" Style="{StaticResource Caption}" TextWrapping="Wrap" FontSize="14"/>
+    <Border Background="#1C3026" BorderBrush="#36513F" BorderThickness="1" CornerRadius="18" Padding="22,16">
+     <StackPanel Spacing="7">
+      <TextBlock x:Name="PhaseLabel" Text="YOUR SUGGESTED BREAK" HorizontalAlignment="Center" Foreground="{StaticResource Accent}" FontSize="10" CharacterSpacing="160"/>
+      <TextBlock x:Name="Countdown" Text="00:45" HorizontalAlignment="Center" FontSize="56" FontWeight="Light"/>
+      <ProgressBar x:Name="BreakProgress" Maximum="100" Value="0" Foreground="{StaticResource Accent}" Background="#2C4437" Height="4"/>
+      <TextBlock x:Name="TimerCaption" Text="Work time pauses when you start." Style="{StaticResource Caption}" HorizontalAlignment="Center" FontSize="12"/>
+     </StackPanel>
+    </Border>
+    <ComboBox x:Name="TypeSelector" Header="Break length" HorizontalAlignment="Stretch" SelectionChanged="Type_Changed"><ComboBoxItem Content="Quick · 45 seconds"/><ComboBoxItem Content="Short · 2 minutes 30 seconds"/><ComboBoxItem Content="Full · 5 minutes"/></ComboBox>
+    <Grid><TextBlock Text="A little care for your body" FontSize="17" FontWeight="SemiBold"/><TextBlock x:Name="CompletedCount" Text="0 completed" Style="{StaticResource Caption}" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Center"/></Grid>
+    <StackPanel x:Name="ExercisePanel" Spacing="10"/>
+    <TextBlock Text="Move gently, within a comfortable range. Stop if you feel pain. Mark an exercise only when you have finished it." Style="{StaticResource Caption}" FontSize="11" TextWrapping="Wrap"/>
+    <InfoBar x:Name="ErrorBar" IsOpen="False" IsClosable="True" Severity="Error"/>
+    <Button x:Name="StartButton" Content="Start break" Click="Start_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+    <Button x:Name="FinishButton" Content="Finish break" Click="Finish_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Visibility="Collapsed" IsEnabled="False"/>
+    <Grid ColumnSpacing="12"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Button x:Name="SnoozeButton" Content="Remind me in 5 minutes" Click="Snooze_Click" Style="{StaticResource QuietButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/><Button x:Name="SkipButton" Grid.Column="1" Content="Skip" Click="Skip_Click" Style="{StaticResource QuietButton}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/></Grid>
+    <TextBlock x:Name="StrictHint" Text="You stay in control. Emergency skip and system shortcuts are always available." Style="{StaticResource Caption}" FontSize="11" TextWrapping="Wrap" Visibility="Collapsed"/>
+   </StackPanel>
+  </ScrollViewer>
+ </Grid>
+</Window>

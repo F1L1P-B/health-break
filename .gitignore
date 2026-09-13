@@ -1,0 +1,17 @@
+bin/
+obj/
+.packages/
+.vs/
+artifacts/
+*.user
+*.db
+*.db-shm
+*.db-wal
+*.log
+.tools/
+
+.idea/
+healthbreak/
+MojProgram/
+**/obj
+**/bin
