@@ -162,17 +162,28 @@ Pliki SQLite i ich kopie nie są szyfrowane; chronią je uprawnienia konta Windo
 ## Zrzuty ekranu
 
 - Dashboard: ciemny interfejs, karty czasu i Health Score
+
 ![Dashboard](./screenshots/dashboard.png)
+
 - Popup przypomnienia oraz okno z ćwiczeniami
+
 <img src="./screenshots/popup.png" width="48%" alt="Popup"> <img src="./screenshots/popup2.png" width="48%" alt="Popup">
+
 - Statistics: dzienne wartości i 7 dni historii
+
 ![Statistics](./screenshots/stats.png)
+
 - Biblioteka ćwiczeń
+
 ![Excercise library](./screenshots/excercises.png)
+
 - Settings oraz opcja Demo Mode
+
 ![Settings](./screenshots/settings.png)
 ![Settings](./screenshots/settings2.png)
+
 - Strict Mode z przyciskiem Emergency skip.
+
 ![Strict Mode](./screenshots/strict.png)
 ![Strict Mode](./screenshots/strict2.png)
 
